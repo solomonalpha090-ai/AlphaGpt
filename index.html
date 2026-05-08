@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlphaGPT AI</title>
+  <title>AlphaGPT</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,25 +13,32 @@
 
   <div class="sidebar">
     <h2>AlphaGPT</h2>
-    <button onclick="clearChat()">New Chat</button>
+
+    <button onclick="clearChat()">
+      New Chat
+    </button>
   </div>
 
   <div class="main">
 
     <div class="topbar">
-      <h1>AlphaGPT AI</h1>
+      AlphaGPT AI
     </div>
 
     <div id="chat-box" class="chat-box"></div>
 
     <div class="input-area">
-      <input 
-        type="text" 
-        id="user-input" 
-        placeholder="Ask AlphaGPT anything..."
+
+      <input
+        type="text"
+        id="user-input"
+        placeholder="Type message..."
       >
 
-      <button onclick="sendMessage()">➤</button>
+      <button id="send-btn">
+        Send
+      </button>
+
     </div>
 
   </div>
@@ -38,6 +46,32 @@
 </div>
 
 <script src="script.js"></script>
+
+<script>
+
+document
+.getElementById("send-btn")
+.addEventListener(
+  "click",
+  sendMessage
+);
+
+document
+.getElementById("user-input")
+.addEventListener(
+  "keypress",
+  function(event){
+
+    if(event.key === "Enter"){
+
+      sendMessage();
+
+    }
+
+  }
+);
+
+</script>
 
 </body>
 </html>

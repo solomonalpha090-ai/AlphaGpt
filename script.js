@@ -1,4 +1,4 @@
-const API_KEY = "07119793756184770573845c906f7fbc756db8243c3896e7fc92d09c9f7aad4b";
+const API_KEY = promt("Enter OpenRouter API Key";
 
 const chatBox = document.getElementById("chat-box");
 
@@ -21,7 +21,7 @@ async function sendMessage(){
 
   const message = input.value.trim();
 
-  if(message === "") return;
+  if(!message) return;
 
   addMessage(message, "user-message");
 
@@ -40,20 +40,23 @@ async function sendMessage(){
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        method:"POST",
-        headers:{
-          "Authorization":`Bearer ${API_KEY}`,
-          "Content-Type":"application/json"
+        method: "POST",
+
+        headers: {
+          "Authorization": `Bearer ${API_KEY}`,
+          "HTTP-Referer": window.location.href,
+          "X-Title": "AlphaGPT",
+          "Content-Type": "application/json"
         },
 
-        body:JSON.stringify({
+        body: JSON.stringify({
 
-          model:"openai/gpt-oss-20b",
+          model: "mistralai/mistral-7b-instruct",
 
-          messages:[
+          messages: [
             {
-              role:"user",
-              content:message
+              role: "user",
+              content: message
             }
           ]
 
@@ -66,19 +69,34 @@ async function sendMessage(){
 
     typing.remove();
 
-    addMessage(
-      data.choices[0].message.content,
-      "bot-message"
-    );
+    console.log(data);
+
+    if(data.choices){
+
+      addMessage(
+        data.choices[0].message.content,
+        "bot-message"
+      );
+
+    }else{
+
+      addMessage(
+        "API Error: " + JSON.stringify(data),
+        "bot-message"
+      );
+
+    }
 
   }catch(error){
 
     typing.remove();
 
     addMessage(
-      "Error connecting to AI.",
+      "Connection failed.",
       "bot-message"
     );
+
+    console.log(error);
 
   }
 

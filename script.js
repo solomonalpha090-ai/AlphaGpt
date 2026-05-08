@@ -1,4 +1,4 @@
-const API_KEY = prompt("Enter OpenRouter API Key");
+const API_KEY = prompt("84770573845c906f7fbc756db8243c3896e7fc92d09c9f7aad4b");
 
 const chatBox = document.getElementById("chat-box");
 

@@ -30,23 +30,37 @@ async function sendMessage(){
 
   input.value = "";
 
-  addMessage("Typing...", "bot-message");
+  const typing = document.createElement("div");
+
+  typing.className = "bot-message";
+
+  typing.innerHTML = "AlphaGPT is typing...";
+
+  chatBox.appendChild(typing);
 
   try{
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
+
         method: "POST",
 
         headers: {
+
           "Authorization": "Bearer " + API_KEY,
+
+          "HTTP-Referer": window.location.href,
+
+          "X-Title": "AlphaGPT",
+
           "Content-Type": "application/json"
+
         },
 
         body: JSON.stringify({
 
-          model: "meta-llama/llama-3-8b-instruct",
+          model: "mistralai/mistral-7b-instruct:free",
 
           messages: [
             {
@@ -62,11 +76,13 @@ async function sendMessage(){
 
     const data = await response.json();
 
-    document.querySelector(".bot-message:last-child").remove();
+    typing.remove();
 
     console.log(data);
 
-    if(data.choices){
+    if(data.choices &&
+       data.choices[0] &&
+       data.choices[0].message){
 
       addMessage(
         data.choices[0].message.content,
@@ -76,7 +92,8 @@ async function sendMessage(){
     }else{
 
       addMessage(
-        "API Error",
+        "API ERROR:<br>" +
+        JSON.stringify(data),
         "bot-message"
       );
 
@@ -84,15 +101,21 @@ async function sendMessage(){
 
   }catch(error){
 
-    document.querySelector(".bot-message:last-child").remove();
+    typing.remove();
 
     addMessage(
-      "Connection failed",
+      "Connection Failed",
       "bot-message"
     );
 
     console.log(error);
 
   }
+
+}
+
+function clearChat(){
+
+  chatBox.innerHTML = "";
 
 }

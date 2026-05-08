@@ -1,4 +1,4 @@
-const API_KEY = promt("Enter OpenRouter API Key";
+const API_KEY = prompt("Enter OpenRouter API Key");
 
 const chatBox = document.getElementById("chat-box");
 
@@ -13,27 +13,22 @@ function addMessage(message, className){
   chatBox.appendChild(div);
 
   chatBox.scrollTop = chatBox.scrollHeight;
+
 }
 
 async function sendMessage(){
 
   const input = document.getElementById("user-input");
 
-  const message = input.value.trim();
+  const message = input.value;
 
-  if(!message) return;
+  if(message.trim() === ""){
+    return;
+  }
 
   addMessage(message, "user-message");
 
   input.value = "";
-
-  const typing = document.createElement("div");
-
-  typing.className = "typing";
-
-  typing.innerHTML = "AlphaGPT is typing...";
-
-  chatBox.appendChild(typing);
 
   try{
 
@@ -43,14 +38,11 @@ async function sendMessage(){
         method: "POST",
 
         headers: {
-          "Authorization": `Bearer ${API_KEY}`,
-          "HTTP-Referer": window.location.href,
-          "X-Title": "AlphaGPT",
+          "Authorization": "Bearer " + API_KEY,
           "Content-Type": "application/json"
         },
 
         body: JSON.stringify({
-
           model: "mistralai/mistral-7b-instruct",
 
           messages: [
@@ -59,17 +51,12 @@ async function sendMessage(){
               content: message
             }
           ]
-
         })
 
       }
     );
 
     const data = await response.json();
-
-    typing.remove();
-
-    console.log(data);
 
     if(data.choices){
 
@@ -81,24 +68,24 @@ async function sendMessage(){
     }else{
 
       addMessage(
-        "API Error: " + JSON.stringify(data),
+        "API Error",
         "bot-message"
       );
+
+      console.log(data);
 
     }
 
   }catch(error){
 
-    typing.remove();
-
     addMessage(
-      "Connection failed.",
+      "Connection failed",
       "bot-message"
     );
 
     console.log(error);
 
-  }
+  }÷
 
 }
 
